@@ -2,10 +2,9 @@
 
 import unittest
 from models.base_model import BaseModel
-from datetime import datetime
 import os
 import uuid
-
+from datetime import datetime
 
 class TestBaseModelClass(unittest.TestCase):
     """ This is the test cases for BaseModel class """
