@@ -42,3 +42,30 @@ class TestBaseModelClass(unittest.TestCase):
             f"{self.first_model.__dict__}"
         )
         self.assertEqual(str(self.first_model), expected_output)
+
+            def test_save_method(self):
+        """
+           This is the test that the save method updates the
+           updated_at attribute to current datetime
+        """
+        initial = self.first_model.updated_at
+        updated = self.first_model.save()
+        self.assertNotEqual(initial, updated)
+
+    def test_to_dict_method(self):
+        """
+           This is the test that the to_dict method returns a dictionary
+           representation of object with all the instance attributes set
+        """
+        self.assertIsInstance(self.first_model.to_dict(), dict)
+
+    def test_ISO_format(self):
+        """
+           This is the test that the created_at and updated_at attributes
+           are converted to string objects in the ISO format specified.
+           This makes use of the regular expression to match the patterns.
+        """
+        obj = self.first_model.to_dict()
+        pattern = r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}"
+        self.assertRegex(str(obj['created_at']), pattern)
+        self.assertRegex(str(obj['updated_at']), pattern)
