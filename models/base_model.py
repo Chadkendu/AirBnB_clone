@@ -21,17 +21,19 @@ class BaseModel():
             args (any) - the non-keyworded arguments
             kwargs (any) - the keyworded key and valued paired arguments
         """
-        if bool(kwargs) is True and len(kwargs) > 0:
-            for key_attr, attr_value in kwargs.items():
-                if key_attr != "__class__":
-                    setattr(self, key_attr, attr_value)
-                elif key_attr in ['created_at', 'updated_at']:
-                    setattr(self, key_attr,
-                            dt.strptime(attr_value, "%Y-%m-%dT%H:%M:%S.%f"))
+        
+        if (kwargs):
+            for key, value in kwargs.items():
+                if key == '__class__':
+                    pass
+                elif key in ['created_at', 'updated_at']:
+                    setattr(self, key, dt.fromisoformat(value))
+                else:
+                    setattr(self, key, value)
         else:
             self.id = str(uid.uuid4())
             self.created_at = dt.now()
-            self.updated_at = self.created_at
+            self.updated_at = dt.now()
 
     def __str__(self) -> str:
         """The Public instance method for the BaseModel that returns a String
@@ -47,9 +49,17 @@ class BaseModel():
     def to_dict(self) -> dict:
         """The Public instance method that returns a dictionary of key/values of
         __dict__ of the BaseModel instance"""
-        new_dict = dict(self.__dict__)
-        new_dict['id'] = self.id
-        new_dict['__class__'] = self.__class__.__name__
-        new_dict['created_at'] = self.created_at.strftime('%Y-%m-%dT%H:%M:%S.%f')
-        new_dict['updated_at'] = self.updated_at.strftime('%Y-%m-%dT%H:%M:%S.%f')
-        return new_dict
+        data = {}
+        # This iterates over all the attributes of the object
+        for attr in self.__dict__:
+            key = attr
+            # this gets the value of the attribute
+            value = getattr(self, attr)
+            # this convert to string object in ISO format
+            if key == 'created_at' or key == 'updated_at':
+                value = value.isoformat()
+            # this collect data for serializable attributes
+            data[key] = value
+            # this adds the key __class__ with the name of the class object
+            data['__class__'] = self.__class__.__name__
+        return data
