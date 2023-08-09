@@ -1,43 +1,55 @@
 #!/usr/bin/python3
-""" Function that defines the BaseModel class """
-import uuid
-from datetime import datetime
+"""This imports some Standard modules and modules from the project packages"""
+from datetime import datetime as dt
+import uuid as uid
+import models
+
+"""
+This is the Python class that will use Base class or Parent class from which
+the other classes will inherit.
+"""
 
 
-class BaseModel:
-    """ This defines all common attributes or methods for other classes """
-
-    def __init__(self):
-        """ Initialize instances """
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
-
-    def __str__(self):
-        """ This returns the string representation of the instance """
-        str_rep = "[{}] ({}) {}"
-        cls_name = __class__.__name__
-        return (str_rep.format(cls_name, self.id, self.__dict__))
-
-    def save(self):
-        """ This Updates updated_at with the current datetime """
-        self.updated_at = datetime.now()
-
-    def to_dict(self):
-        """ This returns a dictionary containing all keys or values
-            of __dict__ of an instance
+class BaseModel():
+    """
+    This is the class modelling BaseModel object for the AirBnB Clone project.
+    """
+    def __init__(self, *args, **kwargs) -> None:
+        """This is the constructor for the BaseModel class that makes and instance
+        an instances of the BaseModel object when created.
+        Args:
+            args (any) - the non-keyworded arguments
+            kwargs (any) - the keyworded key and valued paired arguments
         """
-        data = {}
-        # This iterate over all the attributes of the object
-        for attr in self.__dict__:
-            key = attr
-            # This get the value of the attribute
-            value = getattr(self, attr)
-            # This convert to string object in ISO format
-            if key == 'created_at' or key == 'updated_at':
-                value = value.isoformat()
-            # This collect data for serializable attributes
-            data[key] = value
-            # This add the key __class__ with name of the class object
-            data['__class__'] = self.__class__.__name__
-        return data
+        if bool(kwargs) is True and len(kwargs) > 0:
+            for key_attr, attr_value in kwargs.items():
+                if key_attr != "__class__":
+                    setattr(self, key_attr, attr_value)
+                elif key_attr in ['created_at', 'updated_at']:
+                    setattr(self, key_attr,
+                            dt.strptime(attr_value, "%Y-%m-%dT%H:%M:%S.%f"))
+        else:
+            self.id = str(uid.uuid4())
+            self.created_at = dt.now()
+            self.updated_at = self.created_at
+
+    def __str__(self) -> str:
+        """The Public instance method for the BaseModel that returns a String
+        The representation of our BaseModel class"""
+        return "[{}] ({}) {}".format(self.__class__.__name__,
+                                     self.id, self.__dict__)
+
+    def save(self) -> None:
+        """The Public instance method that updates the `updated_at` public
+        instance property"""
+        self.updated_at = dt.now()
+
+    def to_dict(self) -> dict:
+        """The Public instance method that returns a dictionary of key/values of
+        __dict__ of the BaseModel instance"""
+        new_dict = dict(self.__dict__)
+        new_dict['id'] = self.id
+        new_dict['__class__'] = self.__class__.__name__
+        new_dict['created_at'] = self.created_at.strftime('%Y-%m-%dT%H:%M:%S.%f')
+        new_dict['updated_at'] = self.updated_at.strftime('%Y-%m-%dT%H:%M:%S.%f')
+        return new_dict
