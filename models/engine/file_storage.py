@@ -1,8 +1,14 @@
 #!/usr/bin/python3
 """This Imports some standard modules and modules from the project packages"""
 import json
+from datetime import datetime as dt
+from models.place import Place
+from models.amenities import Amenities
 from models.base_model import BaseModel
-from datetime import datetime as dt 
+from models.state import State
+from models.city import City
+from models.user import User
+from models.review import Review
 
 """
 This is the Python class that will be responsible for the file storage.
