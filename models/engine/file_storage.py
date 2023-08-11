@@ -23,7 +23,7 @@ class FileStorage():
     __objects = {}
 
     def all(self) -> dict:
-        return self.__objects
+        return FileStorage.__objects
 
     def new(self, obj: dict) -> None:
     """
@@ -34,7 +34,7 @@ class FileStorage():
     """
 
     obj_key = "{}.{}".format(obj.__class__.__name__, obj.id)
-    self.__objects[obj_key] = obj
+    FileStorage.__objects[obj_key] = obj
 
     def save(self) -> None:
     """
@@ -60,5 +60,5 @@ class FileStorage():
         for key, val in data_strm.items():
             class_name = key.split(".")[0]
             self.new(eval(class_name + "(**val)"))
-    except:
-        ...
+    except FileNotFoundError:
+        pass
