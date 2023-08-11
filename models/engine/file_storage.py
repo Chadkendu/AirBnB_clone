@@ -2,6 +2,7 @@
 """This Imports some standard modules and modules from the project packages"""
 import json
 from models.base_model import BaseModel
+from datetime import datetime as dt 
 
 """
 This is the Python class that will be responsible for the file storage.
@@ -27,6 +28,18 @@ class FileStorage():
     """
     fmt = "{}.{}".format(obj.__class__.__name__, obj.id)
     self.__objects[fmt] = obj
+
+    def save(self) -> None:
+    """
+    This is a public instance method that serializes the private instance
+    object `__objects` (dict) into a JSON string and save it to a flat
+    database (json file)
+    """
+    dict_serial = {}
+    with open(self.__file_path, mode="w", encoding="utf-8") as fn:
+        for key, val in self.__objects.items():
+            dict_serial[key] = val.to_dict()
+        json.dump(dict_serial, fn)
 
     def reload(self) -> None:
     """
