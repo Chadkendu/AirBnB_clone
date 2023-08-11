@@ -34,6 +34,7 @@ class BaseModel():
             self.id = str(uid.uuid4())
             self.created_at = dt.now()
             self.updated_at = dt.now()
+            models.storage.new(self)
 
     def __str__(self) -> str:
         """The Public instance method for the BaseModel that returns a String
@@ -43,8 +44,9 @@ class BaseModel():
 
     def save(self) -> None:
         """The Public instance method that updates the `updated_at` public
-        instance property"""
+         property instance"""
         self.updated_at = dt.now()
+        models.storage.save()
 
     def to_dict(self) -> dict:
         """The Public instance method that returns a dictionary of key/values of
