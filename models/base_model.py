@@ -21,15 +21,13 @@ class BaseModel():
             args (any) - the non-keyworded arguments
             kwargs (any) - the keyworded key and valued paired arguments
         """
-        
-        if (kwargs):
-            for key, value in kwargs.items():
-                if key == '__class__':
-                    pass
-                elif key in ['created_at', 'updated_at']:
-                    setattr(self, key, dt.fromisoformat(value))
+
+        if kwargs != {} and kwargs is not None and bool(kwargs):
+            for key in kwargs:
+                if key in ["created_at", "updated_at"]:
+                    self.__dict__[key] = dt.fromisoformat(kwargs[key])
                 else:
-                    setattr(self, key, value)
+                    self.__dict__[key] = kwargs[key]
         else:
             self.id = str(uid.uuid4())
             self.created_at = dt.now()
@@ -39,7 +37,7 @@ class BaseModel():
     def __str__(self) -> str:
         """The Public instance method for the BaseModel that returns a String
         The representation of our BaseModel class"""
-        return "[{}] ({}) {}".format(self.__class__.__name__,
+        return "[{}] ({}) {}".format(type(self).__name__,
                                      self.id, self.__dict__)
 
     def save(self) -> None:
@@ -51,17 +49,8 @@ class BaseModel():
     def to_dict(self) -> dict:
         """The Public instance method that returns a dictionary of key/values of
         __dict__ of the BaseModel instance"""
-        data = {}
-        # This iterates over all the attributes of the object
-        for attr in self.__dict__:
-            key = attr
-            # this gets the value of the attribute
-            value = getattr(self, attr)
-            # this convert to string object in ISO format
-            if key == 'created_at' or key == 'updated_at':
-                value = value.isoformat()
-            # this collect data for serializable attributes
-            data[key] = value
-            # this adds the key __class__ with the name of the class object
-            data['__class__'] = self.__class__.__name__
+        data = self.__dict__.copy()
+        data["__class__"] = type(self).__name__
+        data["created_at"] = data["created_at"].isoformat()
+        data["updated_at"] = data["updated_at"].isoformat()
         return data
