@@ -1,11 +1,15 @@
 #!/usr/bin/python3
 """This would import some standard modules and needed modules from the project packages"""
-import json
-import datetime as dt
 import cmd
+import datetime as dt
 from models import storage
+from models.amenity import Amenities
 from models.base_model import BaseModel
-
+from models.city import City
+from models.review import Review
+from models.user import User
+from models.place import Place
+from models.state import State
 
 """
 This is the python class that acts as an interface for the first phase/level
@@ -13,7 +17,12 @@ of the AirBnB Clone project.
 """
 
 all_classes = {
-    "BaseModel": BaseModel
+    "City": City,
+    "User": User,
+    "Place": Place,
+    "Review": Review,
+    "Amenities": Amenities,
+    "State": State,
 }
 
 
