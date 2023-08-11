@@ -32,8 +32,9 @@ class FileStorage():
     Args:
      obj (dict) - the dictionaary object of the file
     """
-    fmt = "{}.{}".format(obj.__class__.__name__, obj.id)
-    self.__objects[fmt] = obj
+
+    obj_key = "{}.{}".format(obj.__class__.__name__, obj.id)
+    self.__objects[obj_key] = obj
 
     def save(self) -> None:
     """
@@ -42,10 +43,10 @@ class FileStorage():
     database (json file)
     """
     dict_serial = {}
-    with open(self.__file_path, mode="w", encoding="utf-8") as fn:
+    with open(self.__file_path, mode="w", encoding="utf-8") as file_obj:
         for key, val in self.__objects.items():
             dict_serial[key] = val.to_dict()
-        json.dump(dict_serial, fn)
+            json.dump(dict_serial, file_obj)
 
     def reload(self) -> None:
     """
@@ -53,8 +54,9 @@ class FileStorage():
     a dictionary object `__objects` only if the  `__file_path` exist.
     """
     try:
-        with open(self.__file_path, mode="r", encoding="utf-8") as fn:
-            data_strm = json.load(fn)
+        path = self.__file_path
+        with open(path, mode="r", encoding="utf-8") as file_obj:
+            data_strm = json.load(file_obj)
         for key, val in data_strm.items():
             class_name = key.split(".")[0]
             self.new(eval(class_name + "(**val)"))
