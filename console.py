@@ -204,7 +204,12 @@ class HBNBCommand(cmd.Cmd):
             return
 
     def help_update(self) -> None:
-        ...
+        """Thhis would updates the help for update"""
+        print("")
+        print("The `update` command updates the specified instance of a", end="")
+        print(" using the class name and the ID of the instance, and", end="")
+        print(" and the specifying the attribute to update or adding", end="")
+        print(" a new attribute plus the value.\n")
 
 
 if __name__ == "__main__":
