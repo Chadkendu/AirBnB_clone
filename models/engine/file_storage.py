@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-"""This Imports some Standard modules and modules from the project packages"""
+"""This Imports some standard modules and modules from the project packages"""
 import json
-from models.base_model import BaseModel as bm
+from models.base_model import BaseModel
 
 """
 This is the Python class that will be responsible for the file storage.
