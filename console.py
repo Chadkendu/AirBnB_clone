@@ -28,11 +28,11 @@ all_classes = {
 
 
 attributes = {
-    "BaseModel":{
+    "BaseModel": {
 	"created_at": dt.datetime,
         "updated_at": dt.datetime
         "id": str,
-    }, "User":{
+    }, "User": {
 	"first_name": str,
         "last_name": str
         "email": str,
@@ -194,18 +194,18 @@ class HBNBCommand(cmd.Cmd):
         instances of the class based on the classname that was specified or if no
         classname specified"""
         list_all = []
-        str_obj = storage.all()
-        arg_num = args.split(" ")
-        if len(args) == 0:
-            for obj in str_obj.values():
-                list_all.append(str(obj))
-        elif arg_num[0] in all_classes.keys():
-            for id in str_obj.keys():
-                if id.split(".")[0] == arg_num[0]:
-                    list_all.append(str(str_obj[id]))
+        if args != "":
+            arg_num = args.split(" ")
+            if arg_num[0] in all_classes.keys():
+                for key, val in storage.all().items():
+                    if type(val).__name__ == arg_num[0]:
+                        list_all.append(str(val))
+            else:
+                print("** the class does not exist **")
+                return
         else:
-            print("** the class doesn't exist **")
-            return
+            for key, val in storage.all().items():
+                list_all.append(str(val))
         print(list_all)
 
     def help_all(self) -> None:
@@ -213,12 +213,15 @@ class HBNBCommand(cmd.Cmd):
         print("")
         print("The `all` command displays the string representation", end="")
         print(" of all the class instances present in the projet storage.\n")
-        print("Usage:\n(hbnb) show all User\n")
+        print("Usage:\n(hbnb) all the User\nor\n(hbnb) User.all()\n")
 
     def do_update(self, args) -> None:
         """This public instance method that will updates the specified instance of the class
         using the id and either adding more attributes or updating the
         attribute"""
+        if len(args) == 0:
+            print("** the class name is missing **")
+            return
         regx = r'^(\S+)(?:\s(\S+)(?:\s(\S+)(?:\s((?:"[^"]*")|(?:(\S)+)))?)?)?'
         is_match = re.search(regx, args)
         cls_name_match = is_match.group(1)
@@ -247,8 +250,9 @@ class HBNBCommand(cmd.Cmd):
                                     try:
                                         val_match = datatype(val_match)
                                     except ValueError:
-                                        ...
-                                setattr(storage.all()[id], attr_match, val_match)
+                                        pass
+                                setattr(storage.all()[id], attr_match,
+                                        val_match)
                                 storage.all()[id].save()
                             else:
                                 print("** the value is missing **")
@@ -271,10 +275,81 @@ class HBNBCommand(cmd.Cmd):
         print(" and the specifying the attribute to update or adding", end="")
         print(" a new attribute plus the value.\n")
 
+    def do_count(self, args) -> None:
+        """This is the public instance method that counts instances of class"""
+        if len(args) == 0:
+            print("** the class name is missing **")
+            return
+        arg_num = args.split(" ")
+        instance_count = 0
+        if arg_num[0]:
+            if arg_num[0] in all_classes.keys():
+                for num in storage.all():
+                    if num.startswith(arg_num[0] + "."):
+                        instance_count += 1
+            else:
+                print("** the class does not exist **")
+                return
+        else:
+            print("** the class name is missing **")
+            return
+        print(instance_count)
+
+    def help_count(self) -> None:
+        """This would update the help for count"""
+        print("")
+        print("The `count` command wouldl displays the number of instances", end="")
+        print(" of the specified class found in json file.", end="\n")
+        print("Usage:\n(hbnb) the count User'\nor\n(hbnb) User.count()\n")
+
+    def default(self, args):
+        """This public instance method is called when there is an invalid command
+        given. If not overwritten, it displays an error, but will
+        be handling invalid commands before returning False if command doesn't
+        exist."""
+        arg_num = args.split(".")
+        cls_name = arg_num[0]
+        if cls_name in all_classes.keys() and len(arg_num) > 1:
+            cmd = arg_num[1]
+            cmd = cmd.replace("()", "")
+            if cmd in ['all', 'count']:
+                if cmd == 'all':
+                    self.do_all(cls_name)
+                elif cmd == 'count':
+                    self.do_count(cls_name)
+            else:
+                if "show" in cmd:
+                    id = cmd.split("(")[1].strip(")")
+                    joiner = cls_name + " " + id
+                    joiner = joiner.replace('"', "")
+                    self.do_show(joiner)
+                elif "destroy" in cmd:
+                    id = cmd.split("(")[1].strip(")")
+                    joiner = cls_name + " " + id
+                    joiner = joiner.replace('"', "")
+                    self.do_destroy(joiner)
+                elif "update" in cmd:
+                    clsname = cls_name
+                    if "{" not in cmd.split("(")[1]:
+                        cid = cmd.split("(")[1].split(", ")[0].strip(')"')
+                        cr_at = cmd.split("(")[1].split(", ")[1].strip(')"')
+                        up_at = cmd.split("(")[1].split(", ")[2].strip(')"')
+                        joiner = "{} {} {} {}".format(clsname, cid, cr_at,
+                                                      up_at)
+                        print(joiner)
+                        self.do_update(joiner)
+                    elif len(cmd.split("(")[1].split(", {")) == 2:
+                        cid = cmd.split("(")[1].split(", {")[0].strip(')"')
+                        stn = cmd.split("(")[1].split(", {")[1].strip(")")
+                        dic = eval("{" + stn)
+                        for key, val in dic.items():
+                            joiner = "{} {} {} {}".format(clsname, cid,
+                                                          key, str(val))
+                            print(joiner)
+                            self.do_update(joiner)
+
+
 
 if __name__ == "__main__":
-    try:
-        commnd = HBNBCommand()
-        commnd.cmdloop()
-    except (KeyboardInterrupt, EOFError):
-        exit(1)
+    commnd = HBNBCommand()
+    commnd.cmdloop()
