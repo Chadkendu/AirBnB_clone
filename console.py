@@ -3,6 +3,7 @@
 import cmd
 import datetime as dt
 from models import storage
+import re
 from models.amenity import Amenities
 from models.base_model import BaseModel
 from models.city import City
@@ -23,6 +24,43 @@ all_classes = {
     "Review": Review,
     "Amenities": Amenities,
     "State": State,
+}
+
+
+attributes = {
+    "BaseModel":{
+	"created_at": dt.datetime,
+        "updated_at": dt.datetime
+        "id": str,
+    }, "User":{
+	"first_name": str,
+        "last_name": str
+        "email": str,
+        "password": str,
+    }, "State": {
+        "name": str
+    }, "City": {
+        "state_id": str,
+        "name": str
+    }, "Amenities": {
+        "name": str
+    }, "Place": {
+        "city_id": str,
+        "user_id": str,
+        "name": str,
+        "description": str,
+        "max_guest": int,
+        "price_by_night": int,
+        "latitude": float,
+        "number_rooms": int,
+        "number_bathrooms": int,
+        "longitude": float,
+        "amenity_ids": list
+    }, "Review": {
+        "place_id": str,
+        "user_id": str,
+        "text": str
+    }
 }
 
 
@@ -181,39 +219,49 @@ class HBNBCommand(cmd.Cmd):
         """This public instance method that will updates the specified instance of the class
         using the id and either adding more attributes or updating the
         attribute"""
-        if len(args) == 0:
-            print("** the class name missing **")
-            return
-        str_obj = storage.all()
-        arg_num = args.split(" ")
-        if arg_num[0] in all_classes.keys():
-            if len(arg_num) < 2:
-                print("** thee is no instance found **")
-                return
-            elif arg_num[1] in [id.split(".")[1] for id in str_obj.keys()]:
-                id = "{}.{}".format(arg_num[0], arg_num[1])
-                obj = str_obj[id]
-                if len(arg_num) < 3:
-                    print("** the attribute name missing **")
-                    return
-                else:
-                    if len(arg_num) < 4:
-                        print("** thevalue missing **")
-                        return
+        regx = r'^(\S+)(?:\s(\S+)(?:\s(\S+)(?:\s((?:"[^"]*")|(?:(\S)+)))?)?)?'
+        is_match = re.search(regx, args)
+        cls_name_match = is_match.group(1)
+        uid_match = is_match.group(2)
+        attr_match = is_match.group(3)
+        val_match = is_match.group(4)
+        if is_match:
+            if cls_name_match in all_classes.keys():
+                if uid_match:
+                    id = "{}.{}".format(cls_name_match, uid_match)
+                    if id in storage.all():
+                        if attr_match:
+                            if val_match:
+                                datatype = None
+                                if not re.search('^".*"$', val_match):
+                                    if '.' in val_match:
+                                        datatype = float
+                                    else:
+                                        datatype = int
+                                else:
+                                    val_match = val_match.replace('"', '')
+                                attrs = attributes[cls_name_match]
+                                if attr_match in attrs:
+                                    val_match = attrs[attr_match](val_match)
+                                elif datatype:
+                                    try:
+                                        val_match = datatype(val_match)
+                                    except ValueError:
+                                        ...
+                                setattr(storage.all()[id], attr_match, val_match)
+                                storage.all()[id].save()
+                            else:
+                                print("** the value is missing **")
+                        else:
+                            print("** the attribute name missing **")
                     else:
-                        try:
-                            setattr(obj, arg_num[2],
-                                    eval(arg_num[3].strip('"')))
-                        except Exception:
-                            setattr(obj, arg_num[2], arg_num[3].strip('"'))
-                        setattr(obj, 'updated_at', dt.datetime.now())
-                        storage.save()
+                        print("** sorry no instance found **")
+                else:
+                    print("** the instance id is missing **")
             else:
-                print("** there is no instance found **")
-                return
+                print("** the class does not exist **")
         else:
-            print("** the class doesn't exist **")
-            return
+            print("** the class name missing **")
 
     def help_update(self) -> None:
         """Thhis would updates the help for update"""
