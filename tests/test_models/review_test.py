@@ -10,6 +10,7 @@ from models.city import City
 from models.place import Place
 from models.review import Review
 
+
 class Testreview(unittest.TestCase):
 
     def test_class(self):
