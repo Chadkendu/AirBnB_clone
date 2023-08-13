@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""This would import some of the standard modules and modules from the project packages"""
+"""This imports some of the standard modules and modules from packages"""
 from models.base_model import BaseModel
 
 """

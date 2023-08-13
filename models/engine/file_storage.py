@@ -27,10 +27,10 @@ class FileStorage():
 
     def new(self, obj: dict) -> None:
     """
-    This is the public instance of the method that sets in `__objects` `obj` with
+    The public instance of the method that sets in `__objects` `obj` with
     the key
     Args:
-     obj (dict) - the dictionaary object of the file
+    obj (dict) - the dictionaary object of the file
     """
 
     obj_key = "{}.{}".format(obj.__class__.__name__, obj.id)
@@ -50,7 +50,7 @@ class FileStorage():
 
     def reload(self) -> None:
     """
-    This is the public instance of the method that deserializes the json string into
+    The public instance of method that deserializes the json string into
     a dictionary object `__objects` only if the  `__file_path` exist.
     """
     try:

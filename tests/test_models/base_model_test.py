@@ -6,6 +6,7 @@ import os
 import uuid
 from datetime import datetime
 
+
 class TestBaseModelClass(unittest.TestCase):
     """ This is the test cases for BaseModel class """
 
@@ -42,7 +43,7 @@ class TestBaseModelClass(unittest.TestCase):
         )
         self.assertEqual(str(self.first_model), expected_output)
 
-            def test_save_method(self):
+    def test_save_method(self):
         """
            This is the test that the save method updates the
            updated_at attribute to current datetime
@@ -68,7 +69,6 @@ class TestBaseModelClass(unittest.TestCase):
         pattern = r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}"
         self.assertRegex(str(obj['created_at']), pattern)
         self.assertRegex(str(obj['updated_at']), pattern)
-
 
     def test_recreate_instance(self):
         """

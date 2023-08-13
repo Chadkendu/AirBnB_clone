@@ -12,8 +12,8 @@ class TestFileStorageClass(unittest.TestCase):
 
     def test_private_class_instance(self):
         """
-           This is the test that the __file_path and __objects attributes are
-           initialized with correctly and when a new instance of FileStorage is created
+           The test that the __file_path and __objects attributes are
+           initialized correctly and when new instance of FileStorage created
         """
         storage = FileStorage()
         self.assertEqual(storage._FileStorage__file_path, "file.json")

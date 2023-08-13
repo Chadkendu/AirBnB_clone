@@ -15,7 +15,7 @@ class BaseModel():
     This is the class modelling BaseModel object for the AirBnB Clone project.
     """
     def __init__(self, *args, **kwargs) -> None:
-        """This is the constructor for the BaseModel class that makes and instance
+        """This is constructor for BaseModel class that makes and instance
         an instances of the BaseModel object when created.
         Args:
             args (any) - the non-keyworded arguments
@@ -47,7 +47,7 @@ class BaseModel():
         models.storage.save()
 
     def to_dict(self) -> dict:
-        """The Public instance method that returns a dictionary of key/values of
+        """The Public instance method that returns dictionary of key of
         __dict__ of the BaseModel instance"""
         data = self.__dict__.copy()
         data["__class__"] = type(self).__name__
