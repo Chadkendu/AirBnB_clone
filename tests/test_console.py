@@ -53,50 +53,50 @@ class TestConsole(unittest.TestCase):
         self.assertTrue(sys.stdout.getvalue())
         self.flush_buffer()
         self.cli.onecmd("create")
-        self.assertEqual("** the class name is missing **\n", sys.stdout.getvalue())
+        self.assertEqual("** class name missing **\n", sys.stdout.getvalue())
         self.flush_buffer()
         self.cli.onecmd("create UserModel")
-        self.assertEqual("** the class doesn't exist **\n", sys.stdout.getvalue())
+        self.assertEqual("** class doesn't exist **\n", sys.stdout.getvalue())
 
     def test_destroy(self):
         self.cli.onecmd("destroy")
-        self.assertEqual("** the class name is missing **\n", sys.stdout.getvalue())
+        self.assertEqual("** class name missing **\n", sys.stdout.getvalue())
         self.flush_buffer()
         self.cli.onecmd("destroy UserModel")
-        self.assertEqual("** the class does not exist **\n", sys.stdout.getvalue())
+        self.assertEqual("** class does not exist **\n", sys.stdout.getvalue())
         self.flush_buffer()
         self.cli.onecmd("destroy BaseModel")
-        self.assertEqual("** the instance id is missing **\n", sys.stdout.getvalue())
+        self.assertEqual("** instance id  missing **\n", sys.stdout.getvalue())
         self.flush_buffer()
         self.cli.onecmd("destroy BaseModel 12112-ahdhdh-233")
-        self.assertEqual("** there is no instance found **\n", sys.stdout.getvalue())
+        self.assertEqual("** no instance found **\n", sys.stdout.getvalue())
         self.flush_buffer()
 
     def test_show(self):
         self.cli.onecmd("show")
-        self.assertEqual("** the class name missing **\n", sys.stdout.getvalue())
+        self.assertEqual("** class name missing **\n", sys.stdout.getvalue())
         self.flush_buffer()
         self.cli.onecmd("show UserModel")
-        self.assertEqual("** the class does not exist **\n", sys.stdout.getvalue())
+        self.assertEqual("** class doesn't exist **\n", sys.stdout.getvalue())
         self.flush_buffer()
         self.cli.onecmd("show BaseModel")
-        self.assertEqual("** the instance id is missing **\n", sys.stdout.getvalue())
+        self.assertEqual("** instance id missing **\n", sys.stdout.getvalue())
         self.flush_buffer()
         self.cli.onecmd("show BaseModel 112-ahdhdh-23")
-        self.assertEqual("** there is no instance found **\n", sys.stdout.getvalue())
+        self.assertEqual("** no instance found **\n", sys.stdout.getvalue())
         self.flush_buffer()
         self.cli.onecmd("create BaseModel")
         self.assertTrue(sys.stdout.getvalue())
 
     def test_update(self):
         self.cli.onecmd("update")
-        self.assertEqual("** the class name missing **\n", sys.stdout.getvalue())
+        self.assertEqual("** class name missing **\n", sys.stdout.getvalue())
         self.flush_buffer()
         self.cli.onecmd("update UserModel")
-        self.assertEqual("** the class does not exist **\n", sys.stdout.getvalue())
+        self.assertEqual("** class doesn't exist **\n", sys.stdout.getvalue())
         self.flush_buffer()
         self.cli.onecmd("update BaseModel")
-        self.assertEqual("** the instance id missing **\n", sys.stdout.getvalue())
+        self.assertEqual("** instance id missing **\n", sys.stdout.getvalue())
         self.flush_buffer()
         self.cli.onecmd("update BaseModel 112-ahdhdh-23")
         self.flush_buffer()
@@ -104,11 +104,12 @@ class TestConsole(unittest.TestCase):
 
     def test_all(self):
         self.cli.onecmd("all UserModel")
-        self.assertEqual("** the class does not exist **\n", sys.stdout.getvalue())
+        self.assertEqual("** class doesn't exist **\n", sys.stdout.getvalue())
 
     def test_count_adv(self):
         obj_dict = storage.all()
         count = 0
+
         for k, v in obj_dict.items():
             if obj_dict[k].__class__.__name__ == "User":
                 count += 1
@@ -118,6 +119,7 @@ class TestConsole(unittest.TestCase):
     def flush_buffer():
         sys.stdout.seek(0)
         sys.stdout.truncate(0)
+
 
 if __name__ == '__main__':
     unittest.main()
