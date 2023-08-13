@@ -37,7 +37,7 @@ class TestConsole(unittest.TestCase):
             lambda x: x[0][0],
             self.mock_stdout.write.call_args_list[-nr:]))
 
-    def test_help(self):
+    def test_do_help(self):
         self.cli.onecmd("help help")
         string = "List the available commands with \"help\" or detailed help"
         string += "\"help cmd\".\n"
@@ -45,10 +45,10 @@ class TestConsole(unittest.TestCase):
         self.cli.onecmd("help create")
         self.assertTrue(self._last_write())
 
-    def test_quit(self):
+    def test_do_quit(self):
         self.assertTrue(self.cli.onecmd("EOF"))
 
-    def test_create(self):
+    def test_do_create(self):
         self.cli.onecmd("create User")
         self.assertTrue(sys.stdout.getvalue())
         self.flush_buffer()
@@ -58,7 +58,7 @@ class TestConsole(unittest.TestCase):
         self.cli.onecmd("create UserModel")
         self.assertEqual("** the class doesn't exist **\n", sys.stdout.getvalue())
 
-    def test_destroy(self):
+    def test_do_destroy(self):
         self.cli.onecmd("destroy")
         self.assertEqual("** the class name is missing **\n", sys.stdout.getvalue())
         self.flush_buffer()
@@ -72,7 +72,7 @@ class TestConsole(unittest.TestCase):
         self.assertEqual("** there is no instance found **\n", sys.stdout.getvalue())
         self.flush_buffer()
 
-    def test_show(self):
+    def test_do_show(self):
         self.cli.onecmd("show")
         self.assertEqual("** the class name missing **\n", sys.stdout.getvalue())
         self.flush_buffer()
@@ -88,7 +88,7 @@ class TestConsole(unittest.TestCase):
         self.cli.onecmd("create BaseModel")
         self.assertTrue(sys.stdout.getvalue())
 
-    def test_update(self):
+    def test_do_update(self):
         self.cli.onecmd("update")
         self.assertEqual("** the class name missing **\n", sys.stdout.getvalue())
         self.flush_buffer()
@@ -102,7 +102,7 @@ class TestConsole(unittest.TestCase):
         self.flush_buffer()
         obj_dict = storage.all()
 
-    def test_all(self):
+    def test_do_all(self):
         self.cli.onecmd("all UserModel")
         self.assertEqual("** the class does not exist **\n", sys.stdout.getvalue())
 
