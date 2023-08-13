@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""This would import some standard modules and needed modules from the project packages"""
+"""This would import some standard modules & needed modules from packages"""
 import cmd
 import datetime as dt
 from models import storage
@@ -29,12 +29,12 @@ all_classes = {
 
 attributes = {
     "BaseModel": {
-	"created_at": dt.datetime,
-        "updated_at": dt.datetime
-        "id": str,
+        "created_at": dt.datetime,
+        "updated_at": dt.datetime,
+        "id": str
     }, "User": {
-	"first_name": str,
-        "last_name": str
+        "first_name": str,
+        "last_name": str,
         "email": str,
         "password": str,
     }, "State": {
@@ -77,7 +77,7 @@ class HBNBCommand(cmd.Cmd):
         exit(1)
 
     def help_quit(self) -> None:
-        """This updates the helps for quit"""
+        """This updates helps for quit"""
         print("")
         print("The `quit` command issues a command to quit the CLI.\n")
         print("Usage:\n(hbnb) quit\n")
@@ -99,8 +99,8 @@ class HBNBCommand(cmd.Cmd):
         ...
 
     def do_create(self, args) -> None:
-        """This is a public instance method that creates new instance of a class, save
-        to a JSON file & print the `id` of the instance"""
+        """The  public instance method that creates new instance of class, save
+        to JSON file & print the `id` of instance"""
         if len(args) == 0:
             print("** the class name is missing **")
             return
@@ -118,14 +118,14 @@ class HBNBCommand(cmd.Cmd):
     def help_create(self) -> None:
         """This updates the help for create"""
         print("")
-        print("The `create` command creates the instance of the class, ", end="")
+        print("The `create` command creates instance of the class, ", end="")
         print("saves it to the storage and prints out the ID of the", end=" ")
         print("instance that was created.\n")
         print("Usage:\n(hbnb) create new User\n")
 
     def do_show(self, args=None) -> None:
-        """The public instance method that will display the string instance of the class,
-        based on the instance id and classname that was specified"""
+        """The public instance method that displays string instance of class,
+        based on instance id & classname that was specified"""
         if len(args) == 0:
             print("** the class name is missing **")
             return
@@ -152,14 +152,14 @@ class HBNBCommand(cmd.Cmd):
         """This updates the help for show"""
         print("")
         print("The `show` command displays the details and string", end=" ")
-        print("representation of the instance based on the class name", end=" ")
+        print("representation of instance based on class name", end=" ")
         print("and instance id provided in the project.\n")
-        print("Usage:\n(hbnb) show User id 51a155c1-214a-4923-8d53-523900fed722")
+        print("Usage:\n(hbnb) User id 51a155a1-214a-a923-8d53-523900fed722")
         print("")
 
     def do_destroy(self, args) -> None:
-        """This public instance method that will delete the instance of the class,
-        based on the instance id and classname that was specified"""
+        """The public instance method that delete the instance of class,
+        based on instance id and classname that was specified"""
         if len(args) == 0:
             print("** the class name missing **")
             return
@@ -186,12 +186,12 @@ class HBNBCommand(cmd.Cmd):
         """This updates the help for destroy"""
         print("")
         print("The `destroy` command deletes all the details of an ", end="")
-        print("instance based on the class name and instance id provided.\n")
-        print("Usage:\n(hbnb) destroy User. 51a155c1-214a-4923-8d53-52fed22\n")
+        print("instance based on class name and instance id provided.\n")
+        print("Usage:\n(hbnb) destroy User. 51a155a1-214a-a923-8d53-52fed22\n")
 
     def do_all(self, args) -> None:
-        """The public instance method that will display the string instance of all
-        instances of the class based on the classname that was specified or if no
+        """The public instance method that displays the string instance of all
+        instances of class based on classname that was specified or if no
         classname specified"""
         list_all = []
         if args != "":
@@ -216,7 +216,7 @@ class HBNBCommand(cmd.Cmd):
         print("Usage:\n(hbnb) all the User\nor\n(hbnb) User.all()\n")
 
     def do_update(self, args) -> None:
-        """This public instance method that will updates the specified instance of the class
+        """The public instance method that update specified instance of class
         using the id and either adding more attributes or updating the
         attribute"""
         if len(args) == 0:
@@ -270,7 +270,7 @@ class HBNBCommand(cmd.Cmd):
     def help_update(self) -> None:
         """Thhis would updates the help for update"""
         print("")
-        print("The `update` command updates the specified instance of a", end="")
+        print("The `update` command updates specified instance of a", end="")
         print(" using the class name and the ID of the instance, and", end="")
         print(" and the specifying the attribute to update or adding", end="")
         print(" a new attribute plus the value.\n")
@@ -298,14 +298,14 @@ class HBNBCommand(cmd.Cmd):
     def help_count(self) -> None:
         """This would update the help for count"""
         print("")
-        print("The `count` command wouldl displays the number of instances", end="")
+        print("The `count` command displays the number of instances", end="")
         print(" of the specified class found in json file.", end="\n")
         print("Usage:\n(hbnb) the count User'\nor\n(hbnb) User.count()\n")
 
     def default(self, args):
-        """This public instance method is called when there is an invalid command
-        given. If not overwritten, it displays an error, but will
-        be handling invalid commands before returning False if command doesn't
+        """The public instance method is called when there is invalid command
+        If ! overwritten, it displays error, but will
+        handle invalid commands before returning False if command doesn't
         exist."""
         arg_num = args.split(".")
         cls_name = arg_num[0]
@@ -347,7 +347,6 @@ class HBNBCommand(cmd.Cmd):
                                                           key, str(val))
                             print(joiner)
                             self.do_update(joiner)
-
 
 
 if __name__ == "__main__":
